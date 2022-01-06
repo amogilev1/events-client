@@ -1,22 +1,102 @@
-import {React, useState} from 'react'
+import { React } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react/cjs/react.development'
+import { AuthContext } from '../context/auth.context'
+import { useHttp } from '../hooks/http.hook'
+import { useNavigate } from 'react-router-dom'
 
 export const CreateEventPage = () => {
-    const [eventName, setEventName] = useState('')
+    const navigate = useNavigate()
+    const [eventTemplates, setEventTemplates] = useState([])
+    const [measures, setMeasures] = useState([])
+    const [requestBody, setRequestBody] = useState({
+        eventTemplateId: null, measureId: null, additionalInfo: '', workplaceId: 1
+    })
+
+    const { loading, request } = useHttp()
+    const { token } = useContext(AuthContext)
+
+    const fetchEventTemplates = useCallback(async () => {
+        try {
+            const fetched = await request('http://localhost:3000/api/eventTemplates', 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            setEventTemplates(fetched.values)
+        } catch (e) { }
+    }, [token, request])
+
+    const fetchMeasures = useCallback(async () => {
+        try {
+            const fetched = await request('http://localhost:3000/api/measures', 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            setMeasures(fetched.values)
+        } catch (e) { }
+    }, [token, request])
+
+    useEffect(() => {
+        fetchEventTemplates()
+        fetchMeasures()
+    }, [fetchEventTemplates, fetchMeasures])
+
+    const changeHandler = (e) => {
+        e.preventDefault()
+        setRequestBody({ ...requestBody, [e.target.name]: e.target.value })
+        console.log(requestBody)
+    }
+    
+    const addEventHandler = async (e) => {
+        try {
+            e.preventDefault()
+            const data = await request('/api/events', 'POST', { ...requestBody } , { Authorization: `Bearer ${token}` })
+            navigate('/events')
+        } catch (e) {
+        }
+    }
+
     return (
-        <div className="row">
-            <div className="col s8 offset-s2" style={{ paddingTop: '2rem' }}>
-                <div className="input-field">
-                    <input
-                        placeholder="Введите название события"
-                        id="eventName"
-                        type="text"
-                        name="eventName"
-                        value={eventName}
-                        onChange={e => setEventName(e.target.value)}
-                    />
-                    <label htmlFor="email">Событие</label>
+        <div>
+            <h1>Добавить событие</h1>
+            <form className="col s12">
+                <div className="row">
+                    <label>Выберите существующее событие</label>
+                    <div className="input-field col s12">
+
+                        <select className="browser-default" name="eventTemplateId" onChange={changeHandler}>
+                            {eventTemplates.map(template => {
+                                return (
+
+                                    <option value={template.id}>{template.event_name}</option>
+
+                                )
+                            })}
+                        </select>
+                    </div>
                 </div>
-            </div>
+                <div className="row">
+                    <label>Выберите Предпринятые меры</label>
+                    <div className="input-field col s12">
+
+                        <select className="browser-default" name="measureId" onChange={changeHandler}>
+                            {measures.map(measure => {
+                                return (
+
+                                    <option value={measure.id}>{measure.measure_name}</option>
+
+                                )
+                            })}
+                        </select>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="input-field col s12">
+                        <input id="first_name" type="text" className="validate" name="additionalInfo" onChange={changeHandler} />
+                        <label htmlFor="first_name">Дополнительная информация</label>
+                    </div>
+                </div>
+                <div className="card-action">
+                    <button className="btn black darken-3" onClick={addEventHandler}>Добавить событие</button>
+                </div>
+            </form>
         </div>
     )
 }
