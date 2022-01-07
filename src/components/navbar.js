@@ -14,7 +14,7 @@ export const Navbar = () => {
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
             <nav>
                 <div className="nav-wrapper black darken-3" style={{ padding: '0 2rem' }}>
-                    <a href="#" className="brand-logo">ZAVOD</a>
+                    <a href="#" className="brand-logo">Группа мониторинга БИТО ОКР</a>
                     <ul id="nav-mobile" className="right hide-on-med-and-down">
                         <li><NavLink to="/users">Пользователи</NavLink></li>
                         <li><NavLink to="/events">События</NavLink></li>

@@ -17,7 +17,7 @@ export const CreateEventPage = () => {
 
     const fetchEventTemplates = useCallback(async () => {
         try {
-            const fetched = await request('http://localhost:3000/api/eventTemplates', 'GET', null, {
+            const fetched = await request('/api/eventTemplates', 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
             setEventTemplates(fetched.values)
@@ -26,7 +26,7 @@ export const CreateEventPage = () => {
 
     const fetchMeasures = useCallback(async () => {
         try {
-            const fetched = await request('http://localhost:3000/api/measures', 'GET', null, {
+            const fetched = await request('/api/measures', 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
             setMeasures(fetched.values)

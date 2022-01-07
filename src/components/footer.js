@@ -1,4 +1,5 @@
 import React from "react"
+import logo from './tagmet.jpg'
 
 export const Footer = () => {
     return (
@@ -6,8 +7,9 @@ export const Footer = () => {
           <div className="container">
             <div className="row">
               <div className="col l6 s12">
-                <h5 className="white-text">ZAVOD</h5>
-                <p className="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                <h5 className="white-text">ОКР БИТО</h5>
+                <p className="grey-text text-lighten-4">Группа мониторинга производственных процессов и перемещения ТМЦ</p>
+                <img src={logo} alt="logo"></img>
               </div>
               <div className="col l4 offset-l2 s12">
                 <h5 className="white-text">Ссылки</h5>

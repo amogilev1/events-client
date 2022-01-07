@@ -5,6 +5,10 @@ body {
     flex-direction: column;
 }
 
+h5 {
+    margin-bottom: 1px;
+}
+
 main {
     flex: 1 0 auto;
 }
