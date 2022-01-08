@@ -14,12 +14,20 @@ main {
 }
 
 table {
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 30px;
+}
+
+footer {
+    margin-top: 30px;
 }
 
 .btn-floating {
     margin-left: 4px;
     height: 1px;
     width: 1px;
+}
+
+.event-filters {
+    margin-top: 20px;
 }

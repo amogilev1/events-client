@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useContext } from 'react/cjs/react.development'
 import { AuthContext } from '../context/auth.context'
 import { useHttp } from '../hooks/http.hook'
+import { useNotify } from '../hooks/notify.hook'
 
 
 export const AuthPage = () => {
+    const { successNotify, errorNotify } = useNotify()
     const auth = useContext(AuthContext)
     const { loading, error, request } = useHttp()
     const [form, setForm] = useState({
@@ -19,16 +21,25 @@ export const AuthPage = () => {
         setForm({ ...form, [event.target.name]: event.target.value })
     }
 
+    const pressHandler = (event) => {
+        if (event.key === 'Enter') {
+            loginHandler()
+        }
+    }
+
     const loginHandler = async () => {
         try {
             const data = await request('/api/auth/signin', 'POST', { ...form })
-            auth.login(data.values.token, 1)
+            auth.login(data.values.token, data.values.userId, data.values.roleId)
+            if (data.values.token) {
+                successNotify('Авторизация прошла успешно')
+            }
         } catch (e) {
         }
     }
 
     return (
-        <div className="row">
+        <div className="row" onKeyPress={pressHandler}>
             <div className="col s6 offset-s3">
                 <h3>Журнал учета событий </h3>
                 <h4>группы мониторинга БИТО ОКР</h4>

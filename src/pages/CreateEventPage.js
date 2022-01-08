@@ -3,6 +3,7 @@ import { useCallback, useContext, useEffect, useState } from 'react/cjs/react.de
 import { AuthContext } from '../context/auth.context'
 import { useHttp } from '../hooks/http.hook'
 import { useNavigate } from 'react-router-dom'
+import { useNotify } from '../hooks/notify.hook'
 
 export const CreateEventPage = () => {
     const navigate = useNavigate()
@@ -13,6 +14,7 @@ export const CreateEventPage = () => {
     })
 
     const { loading, request } = useHttp()
+    const { successNotify, errorNotify } = useNotify()
     const { token } = useContext(AuthContext)
 
     const fetchEventTemplates = useCallback(async () => {
@@ -21,6 +23,7 @@ export const CreateEventPage = () => {
                 Authorization: `Bearer ${token}`
             })
             setEventTemplates(fetched.values)
+            requestBody['eventTemplateId'] = fetched.values[0].id
         } catch (e) { }
     }, [token, request])
 
@@ -30,25 +33,29 @@ export const CreateEventPage = () => {
                 Authorization: `Bearer ${token}`
             })
             setMeasures(fetched.values)
+            requestBody['measureId'] = fetched.values[0].id
         } catch (e) { }
     }, [token, request])
 
     useEffect(() => {
         fetchEventTemplates()
         fetchMeasures()
+        window.M.AutoInit()
     }, [fetchEventTemplates, fetchMeasures])
 
     const changeHandler = (e) => {
         e.preventDefault()
         setRequestBody({ ...requestBody, [e.target.name]: e.target.value })
-        console.log(requestBody)
     }
     
     const addEventHandler = async (e) => {
         try {
             e.preventDefault()
             const data = await request('/api/events', 'POST', { ...requestBody } , { Authorization: `Bearer ${token}` })
-            navigate('/events')
+            if (data) {
+                successNotify('Событие успешно добавлено')
+                navigate('/events')
+            }
         } catch (e) {
         }
     }
@@ -58,10 +65,9 @@ export const CreateEventPage = () => {
             <h1>Добавить событие</h1>
             <form className="col s12">
                 <div className="row">
-                    <label>Выберите существующее событие</label>
-                    <div className="input-field col s12">
+                    <div className="input-field col s6">
 
-                        <select className="browser-default" name="eventTemplateId" onChange={changeHandler}>
+                        <select name="eventTemplateId" className="browser-default" onChange={changeHandler}>
                             {eventTemplates.map(template => {
                                 return (
 
@@ -70,21 +76,36 @@ export const CreateEventPage = () => {
                                 )
                             })}
                         </select>
+                        <label>Выберите существующее событие</label>
+                    </div>
+                    <div className="input-field col s6">
+                        <input id="newEventTemplate" type="text" className="validate" name="newEventTemplateName" onChange={changeHandler} />
+                        <label htmlFor="newEventTemplate">Или введите новое</label>
                     </div>
                 </div>
                 <div className="row">
-                    <label>Выберите Предпринятые меры</label>
-                    <div className="input-field col s12">
-
+                    <div className="input-field col s6">
                         <select className="browser-default" name="measureId" onChange={changeHandler}>
                             {measures.map(measure => {
                                 return (
-
                                     <option value={measure.id}>{measure.measure_name}</option>
-
                                 )
                             })}
                         </select>
+                        <label>Выберите предпринятые меры</label>
+                    </div>
+                    <div className="input-field col s6">
+                        <input id="newMeasure" type="text" className="validate" name="newMeasure" onChange={changeHandler} />
+                        <label htmlFor="newMeasure">Или введите новую</label>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="input-field col s12">
+                        <select name="workplaceId" onChange={changeHandler}>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                        <label>Выберите номер рабочего места</label>
                     </div>
                 </div>
                 <div className="row">

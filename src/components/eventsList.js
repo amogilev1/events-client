@@ -1,7 +1,11 @@
 import React from "react"
 import { EventActions } from "./eventActions"
+import { AuthContext } from "../context/auth.context"
+import { useContext } from "react/cjs/react.development"
 
 export const EventsList = ({ events }) => {
+    const auth = useContext(AuthContext)
+
     if (events.length <= 0) {
         return(
             <p className="center">Событий пока нет</p>
@@ -19,7 +23,7 @@ export const EventsList = ({ events }) => {
                     <th>Место</th>
                     <th>Дополнительная информация</th>
                     <th>Подтверждено руководителем</th>
-                    <th>Действия</th>
+                    {auth.isAdmin && <th>Действия</th>}
                 </tr>
             </thead>
 
@@ -34,9 +38,7 @@ export const EventsList = ({ events }) => {
                             <td>{event.workplace}</td>
                             <td>{event.additionalInfo}</td>
                             <td>{event.confirmed <= 0 ? 'Нет' : 'Да'}</td>
-                            <td>
-                                <EventActions id={event.id} />
-                            </td>
+                            {auth.isAdmin && <td><EventActions id={event.id} /></td>}
                         </tr>
                     )
                 })}

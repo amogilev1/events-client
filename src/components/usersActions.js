@@ -2,16 +2,15 @@ import React from "react";
 import { useContext } from "react/cjs/react.development"
 import { useHttp } from '../hooks/http.hook'
 import { AuthContext } from "../context/auth.context"
-import { useNavigate } from 'react-router-dom'
 
-export const EventActions = ({id}) => {
+export const UsersActions = ({id}) => {
     const { request } = useHttp()
     const { token } = useContext(AuthContext)
 
     const onDeleteHandler = async e => {
         try {
             e.preventDefault()
-            const data = await request('/api/events/remove', 'POST', { eventId: id } , { Authorization: `Bearer ${token}` })
+            const data = await request('/api/users/remove', 'POST', { eventId: id } , { Authorization: `Bearer ${token}` })
             window.location.reload()
         } catch (e) {
         }

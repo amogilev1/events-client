@@ -8,7 +8,7 @@ export const EventTemplatesList = ({ eventTemplates }) => {
         )
     }
     return (
-        <table className="striped">
+        <table className="striped-highlight">
             <thead>
                 <tr>
                     <th>id</th>

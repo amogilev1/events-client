@@ -9,11 +9,12 @@ export const RegistrationPage = () => {
     const auth = useContext(AuthContext)
     const { loading, error, request } = useHttp()
     const [form, setForm] = useState({
-        name: '', secondName: '', email: '', password: ''
+        name: '', secondName: '', email: '', password: '', roleId: '2'
     })
 
     useEffect(() => {
         window.M.updateTextFields()
+        window.M.AutoInit()
     }, [])
 
     const changeHandler = (e) => {
@@ -58,13 +59,14 @@ export const RegistrationPage = () => {
                             <label htmlFor="email">Email</label>
                         </div>
                     </div>
-                    <label>Выберите Роль</label>
-                    <div className="input-field col s12">
-
-                        <select className="browser-default" name="eventTemplateId" onChange={changeHandler}>
-                            <option value='2'>Пользователь</option>
-                            <option value='1'>Администратор</option>
-                        </select>
+                    <div className="row">
+                        <div className="input-field col s12">
+                            <select name="roleId" onChange={changeHandler} value={form.roleId}>
+                                <option value='2'>Пользователь</option>
+                                <option value='1'>Администратор</option>
+                            </select>
+                            <label>Роль</label>
+                        </div>
                     </div>
                     <div className="card-action">
                         <button className="btn black darken-3" onClick={registrationHandler}>Зарегистрировать пользователя</button>

@@ -7,7 +7,7 @@ import { EventsPage } from './pages/EventsPage'
 import { RegistrationPage } from './pages/RegistrationPage'
 import { UsersPage } from './pages/UsersPage'
 
-export const useRoutes = (isAuthenticated) => {
+export const useRoutes = (isAuthenticated, isAdmin) => {
     console.log(isAuthenticated)
     if (isAuthenticated) {
         return (
@@ -15,8 +15,8 @@ export const useRoutes = (isAuthenticated) => {
                 <Route path="/events" element={<EventsPage />} />
                 <Route path="/events/create" element={<CreateEventPage />} />
                 <Route path="/registration" element={<RegistrationPage />} />
-                <Route path="/users" element={<UsersPage />} />
-                <Route path="/admin" element={<AdminPage />} />
+                {isAdmin && <Route path="/users" element={<UsersPage />} />}
+                {isAdmin && <Route path="/admin" element={<AdminPage />} />} 
                 <Route path="*" element={<EventsPage />} />
             </Routes>
         )
