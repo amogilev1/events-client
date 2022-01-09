@@ -37,9 +37,9 @@ export const CreateEventPage = () => {
         } catch (e) { }
     }, [token, request])
 
-    useEffect(() => {
-        fetchEventTemplates()
-        fetchMeasures()
+    useEffect(async () => {
+        await fetchEventTemplates()
+        await fetchMeasures()
         window.M.AutoInit()
     }, [fetchEventTemplates, fetchMeasures])
 
