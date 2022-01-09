@@ -47,11 +47,11 @@ export const CreateEventPage = () => {
         e.preventDefault()
         setRequestBody({ ...requestBody, [e.target.name]: e.target.value })
     }
-    
+
     const addEventHandler = async (e) => {
         try {
             e.preventDefault()
-            const data = await request('/api/events', 'POST', { ...requestBody } , { Authorization: `Bearer ${token}` })
+            const data = await request('/api/events', 'POST', { ...requestBody }, { Authorization: `Bearer ${token}` })
             if (data) {
                 successNotify('Событие успешно добавлено')
                 navigate('/events')
@@ -67,7 +67,7 @@ export const CreateEventPage = () => {
                 <div className="row">
                     <div className="input-field col s6">
 
-                        <select name="eventTemplateId" className="browser-default" onChange={changeHandler}>
+                        <select name="eventTemplateId" onChange={changeHandler}>
                             {eventTemplates.map(template => {
                                 return (
 
@@ -85,7 +85,7 @@ export const CreateEventPage = () => {
                 </div>
                 <div className="row">
                     <div className="input-field col s6">
-                        <select className="browser-default" name="measureId" onChange={changeHandler}>
+                        <select name="measureId" onChange={changeHandler}>
                             {measures.map(measure => {
                                 return (
                                     <option value={measure.id}>{measure.measure_name}</option>

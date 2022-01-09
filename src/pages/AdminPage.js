@@ -81,8 +81,8 @@ export const AdminPage = () => {
             <form className="col s12">
                 <div className="row">
                     <div className="input-field col s12">
-                        <input id="first_name" type="text" className="validate" name="newMeasure" value={newMeasureName} onChange={onNewMeasureChange} />
-                        <label htmlFor="first_name">Название новой меры</label>
+                        <input id="measure" type="text" className="validate" name="newMeasure" value={newMeasureName} onChange={onNewMeasureChange} />
+                        <label htmlFor="measure">Название новой меры</label>
                     </div>
                 </div>
                 <div className="card-action">

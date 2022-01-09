@@ -26,7 +26,7 @@ function App() {
                 <AuthContext.Provider value={{ token, login, logout, userId, isAuthenticated, isAdmin }}>
                     {isAuthenticated && <Navbar />}
                     <main>
-                        <div className="container">
+                        <div className="Mycontainer">
                             {routes}
                         </div>
                         <ToastContainer />

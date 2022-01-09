@@ -40,11 +40,11 @@ export const RegistrationPage = () => {
                     <div className="row">
                         <div className="input-field col s6">
                             <input id="name" name="name" onChange={changeHandler} type="text" value={form.name} className="validate" />
-                            <label htmlFor="first_name">Имя</label>
+                            <label htmlFor="name">Имя</label>
                         </div>
                         <div className="input-field col s6">
                             <input id="secondName" name="secondName" onChange={changeHandler} type="text" value={form.secondName} className="validate" />
-                            <label htmlFor="last_name">Фамилмя</label>
+                            <label htmlFor="secondName">Фамилмя</label>
                         </div>
                     </div>
                     <div className="row">

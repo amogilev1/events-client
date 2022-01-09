@@ -31,3 +31,9 @@ footer {
 .event-filters {
     margin-top: 20px;
 }
+
+.Mycontainer {
+    margin: 0 auto;
+    max-width: 1920px;
+    width: 80%;
+  }

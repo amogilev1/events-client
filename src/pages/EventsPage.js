@@ -1,24 +1,33 @@
 import React from 'react'
 import { useCallback, useContext, useEffect, useState } from 'react/cjs/react.development'
 import { EventsList } from '../components/eventsList'
+import { LoadingComponent } from '../components/loading'
+import { Paginator } from '../components/paginator'
 import { AuthContext } from '../context/auth.context'
 import { useHttp } from '../hooks/http.hook'
 
 export const EventsPage = () => {
-    const maxElementsOnPage = 2
-    const [pages, setPages] = useState({})
+    const [pagesCount, setPagesCount] = useState(1)
+    const [dateFilter, setDateFilter] = useState('allTime')
+    const [eventsLoading, setEventsLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
     const [events, setEvents] = useState([])
     const [workplaceFilter, setWorkplaceFilter] = useState('all')
     const { loading, request } = useHttp()
     const { token } = useContext(AuthContext)
+    const [paginatorElements, setPaginatorElements] = useState([])
 
     const fetchEvents = useCallback(async () => {
         try {
+            setEventsLoading(true)
+            setEvents([])
             const fetched = await request('api/events', 'GET', null, {
                 Authorization: `Bearer ${token}`,
-                Workplace: workplaceFilter
+                Workplace: workplaceFilter,
+                Page: currentPage,
+                test: dateFilter
             })
-            const elementsCount = fetched.values.length
+            console.log('ale ' + fetched.values.length)
             const newArr = await Promise.all(fetched.values.map(async element => {
                 const user = await request('api/user', 'GET', null, {
                     Authorization: `Bearer ${token}`,
@@ -47,17 +56,66 @@ export const EventsPage = () => {
                 }
             }))
             setEvents(newArr)
+            setEventsLoading(false)
         } catch (e) { }
-    }, [token, request, workplaceFilter, maxElementsOnPage])
+    }, [token, request, workplaceFilter, currentPage, setEventsLoading, dateFilter, setEvents])
 
-    useEffect(() => {
+    const fetchPagesCount = useCallback(async () => {
+        try {
+            setEventsLoading(true)
+            setPagesCount(1)
+            setEvents([])
+            const fetched = await request('/api/events/count', 'GET', null, {
+                Authorization: `Bearer ${token}`,
+                Workplace: workplaceFilter,
+                test: dateFilter
+            })
+            setPagesCount(fetched.values)
+            // Filling up paginators
+            const elements = []
+            for (let i = 0; i < fetched.values; i ++) {
+                elements.push(<Paginator pageNumber={i + 1} currentPage={currentPage} setCurrentPage={updateCurrentPage} />)
+            }
+            setPaginatorElements(elements)
+            if (currentPage > fetched.values) {
+                setCurrentPage(1)
+            }
+            setEventsLoading(false)
+        } catch (e) { }
+    }, [token, request, setPagesCount, setPaginatorElements, workplaceFilter, currentPage, setEvents, setEventsLoading, dateFilter, setCurrentPage])
+
+    useEffect(async () => {
         window.M.AutoInit()
-        fetchEvents()
-    }, [fetchEvents])
+        await fetchPagesCount()
+        await fetchEvents()
+
+    }, [fetchEvents, fetchPagesCount, setEvents])
 
     const onWorkplaceFilterChange = (e) => {
         setWorkplaceFilter(e.target.value)
-        fetchEvents()
+    }
+
+    const onDateFilterChange = (e) => {
+        setDateFilter(e.target.value)
+    }
+
+    const updateCurrentPage = useCallback(async (inPage) => {
+        await setCurrentPage(inPage)
+        await fetchEvents()
+    }, [setCurrentPage, fetchEvents])
+
+    const decrementCurrentPageHandler = (e) => {
+        if (currentPage === 1) {
+            return
+        }
+        setCurrentPage(currentPage - 1)
+    }
+
+    const incrementCurrentPageHandler = (e) => {
+        if (currentPage === pagesCount) {
+            return
+        }
+        setCurrentPage(currentPage + 1)
     }
 
     return (
@@ -66,44 +124,33 @@ export const EventsPage = () => {
             <a className="waves-effect waves-light btn black darken-3" href="/events/create">Добавить новое событие</a>
             <div className="event-filters">
                 <div className="row">
-                    <div class="input-field col s3 inline">
-                        <select>
-                            <option value="1">За все время</option>
-                            <option value="2">За сегодня</option>
-                            <option value="3">За последнюю неделю</option>
-                            <option value="3">За последний месяц</option>
+                    <div className="input-field col s4 inline">
+                        <select onChange={onDateFilterChange} value={dateFilter}>
+                            <option value="allTime">За все время</option>
+                            <option value="today">За сегодня</option>
+                            <option value="week">За последнюю неделю</option>
+                            <option value="month">За последний месяц</option>
                         </select>
                         <label>Дата</label>
                     </div>
-                    <div class="input-field col s3 inline">
-                        <select onChange={onWorkplaceFilterChange}>
+                    <div className="input-field col s4 inline">
+                        <select onChange={onWorkplaceFilterChange} value={workplaceFilter}>
                             <option value="all">Любое</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                         </select>
                         <label>Рабочее место</label>
                     </div>
-                    <div class="input-field col s3 inline">
-                        <select>
-                            <option value="1">Любые</option>
-                            <option value="2">Подтверждено</option>
-                            <option value="3">Не подтверждено</option>
-                        </select>
-                        <label>Подтверждено руководителем</label>
-                    </div>
                 </div>
             </div>
-            {!loading && <EventsList events={events} />}
+            {eventsLoading && < LoadingComponent />}
+            {!eventsLoading && <EventsList events={events} />}
 
             <center>
                 <ul className="pagination">
-                    <li className="disabled"><a href="#!"><i class="material-icons ">chevron_left</i></a></li>
-                    <li className="active black darken-3"><a href="#!">1</a></li>
-                    <li className="waves-effect"><a href="#!">2</a></li>
-                    <li className="waves-effect"><a href="#!">3</a></li>
-                    <li className="waves-effect"><a href="#!">4</a></li>
-                    <li className="waves-effect"><a href="#!">5</a></li>
-                    <li className="waves-effect"><a href="#!"><i className="material-icons">chevron_right</i></a></li>
+                    {!eventsLoading && <li className={currentPage === 1 ? "disabled" : "waves-effect"}><a href="#!" onClick={decrementCurrentPageHandler}><i class="material-icons ">chevron_left</i></a></li>}
+                    {!eventsLoading && paginatorElements}
+                    {!eventsLoading && <li className={currentPage >= pagesCount ? "disabled" : "waves-effect"}><a href="#!" onClick={incrementCurrentPageHandler}><i className="material-icons">chevron_right</i></a></li>}
                 </ul>
             </center>
         </div>
