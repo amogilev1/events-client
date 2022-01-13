@@ -10,7 +10,6 @@ export const Navbar = () => {
     };
     return (
         <header>
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
             <nav>
                 <div className="nav-wrapper black darken-3" style={{ padding: '0 2rem' }}>
                     <a href="#" className="brand-logo">Группа мониторинга БИТО ОКР</a>

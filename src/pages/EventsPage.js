@@ -52,7 +52,8 @@ export const EventsPage = () => {
                     eventTemplateName: eventTemplateName,
                     measureName: measureName,
                     confirmed: element.confirmed,
-                    id: element.id
+                    id: element.id,
+                    userId: element.user_id
                 }
             }))
             setEvents(newArr)
@@ -86,8 +87,7 @@ export const EventsPage = () => {
 
     useEffect(async () => {
         window.M.AutoInit()
-        await fetchPagesCount()
-        await fetchEvents()
+        await updateData()
 
     }, [fetchEvents, fetchPagesCount, setEvents])
 
@@ -118,6 +118,11 @@ export const EventsPage = () => {
         setCurrentPage(currentPage + 1)
     }
 
+    const updateData = async () => {
+        await fetchPagesCount()
+        await fetchEvents()
+    }
+
     return (
         <div>
             <h1>Журнал событий</h1>
@@ -144,7 +149,7 @@ export const EventsPage = () => {
                 </div>
             </div>
             {eventsLoading && < LoadingComponent />}
-            {!eventsLoading && <EventsList events={events} />}
+            {!eventsLoading && <EventsList events={events} updatePageCallback={updateData} />}
 
             <center>
                 <ul className="pagination">

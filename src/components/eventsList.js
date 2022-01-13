@@ -3,7 +3,7 @@ import { EventActions } from "./eventActions"
 import { AuthContext } from "../context/auth.context"
 import { useContext } from "react/cjs/react.development"
 
-export const EventsList = ({ events }) => {
+export const EventsList = ({ events, updatePageCallback }) => {
     const auth = useContext(AuthContext)
 
     if (events.length <= 0) {
@@ -38,7 +38,7 @@ export const EventsList = ({ events }) => {
                             <td>{event.workplace}</td>
                             <td>{event.additionalInfo}</td>
                             <td>{event.confirmed <= 0 ? 'Нет' : 'Да'}</td>
-                            {auth.isAdmin && <td><EventActions id={event.id} /></td>}
+                            <td><EventActions id={event.id} eventUserId={event.userId} updatePageCallback={updatePageCallback} confirmed={event.confirmed} /></td>
                         </tr>
                     )
                 })}
