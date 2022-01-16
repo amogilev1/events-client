@@ -31,13 +31,14 @@ export const EventActions = ({id, eventUserId, confirmed, updatePageCallback}) =
     }
 
     const canConfirmEvent = isAdmin && !confirmed
+    const cannotConfirm = isAdmin && confirmed
 
     return (
         <div>
             {isAdmin && <a className="btn-floating btn-small waves-effect waves-light red"><i className="tiny material-icons" onClick={onDeleteHandler} >delete</i></a>}
-            {(isAdmin || eventUserId === userId) && <a className="btn-floating btn-small waves-effect waves-light blue"><i className="tiny material-icons">edit</i></a>}
+            {(isAdmin || eventUserId === userId) && <a className="btn-floating btn-small waves-effect waves-light blue" href={"event/update/" + id}><i className="tiny material-icons">edit</i></a>}
             {(!isAdmin && eventUserId !== userId) && <a className="btn-floating btn-small waves-effect waves-light blue disabled"><i className="tiny material-icons">edit</i></a>}
-            {canConfirmEvent && <a className="btn-floating btn-small waves-effect waves-light green"><i className="tiny material-icons" onClick={onConfirmHandler} >done</i></a>}
+             <a className="btn-floating btn-small waves-effect waves-light orange" href={"event/" + id}><i className="tiny material-icons" >info</i></a>
         </div>
     )
 };

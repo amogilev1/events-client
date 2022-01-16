@@ -53,7 +53,8 @@ export const EventsPage = () => {
                     measureName: measureName,
                     confirmed: element.confirmed,
                     id: element.id,
-                    userId: element.user_id
+                    userId: element.user_id,
+                    closeInfo: element.close_info
                 }
             }))
             setEvents(newArr)

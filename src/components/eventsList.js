@@ -22,8 +22,8 @@ export const EventsList = ({ events, updatePageCallback }) => {
                     <th>Пользователь</th>
                     <th>Место</th>
                     <th>Дополнительная информация</th>
-                    <th>Подтверждено руководителем</th>
-                    {auth.isAdmin && <th>Действия</th>}
+                    <th>Завершение события</th>
+                    <th>Действия</th>
                 </tr>
             </thead>
 
@@ -37,7 +37,7 @@ export const EventsList = ({ events, updatePageCallback }) => {
                             <td>{event.userName}</td>
                             <td>{event.workplace}</td>
                             <td>{event.additionalInfo}</td>
-                            <td>{event.confirmed <= 0 ? 'Нет' : 'Да'}</td>
+                            <td>{event.closeInfo}</td>
                             <td><EventActions id={event.id} eventUserId={event.userId} updatePageCallback={updatePageCallback} confirmed={event.confirmed} /></td>
                         </tr>
                     )
