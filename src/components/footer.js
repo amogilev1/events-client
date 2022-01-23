@@ -17,8 +17,9 @@ export const Footer = () => {
           <div className="col l4 offset-l2 s12">
             <h5 className="white-text">Ссылки</h5>
             <ul>
-              <li><a className="grey-text text-lighten-3" href="#!">Журнал событий</a></li>
-              {auth.isAdmin && <li><a className="grey-text text-lighten-3" href="#!">Пользователи</a></li>}
+              <li><a className="grey-text text-lighten-3" href="/events">Журнал событий</a></li>
+              {auth.isAdmin && <li><a className="grey-text text-lighten-3" href="users">Пользователи</a></li>}
+              {auth.isAdmin && <li><a className="grey-text text-lighten-3" href="admin">Шаблоны</a></li>}
             </ul>
           </div>
         </div>

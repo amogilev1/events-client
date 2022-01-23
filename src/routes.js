@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { AdminPage } from './pages/AdminPage'
 import { AuthPage } from './pages/AuthPage'
+import { ChangePasswordPage } from './pages/ChangePasswordPage'
 import { CreateEventPage } from './pages/CreateEventPage'
 import { DetailPage } from './pages/DetailPage'
 import { EditEventPage } from './pages/EditEventPage'
@@ -17,6 +18,7 @@ export const useRoutes = (isAuthenticated, isAdmin) => {
                 <Route path="/events" element={<EventsPage />} />
                 <Route path="/events/create" element={<CreateEventPage />} />
                 <Route path="/event/update/:id" element={<EditEventPage />} />
+                <Route path="/users/update/:id" element={<ChangePasswordPage />} />
                 <Route path="/event/:id" element={<DetailPage />} />
                 <Route path="/registration" element={<RegistrationPage />} />
                 {isAdmin && <Route path="/users" element={<UsersPage />} />}

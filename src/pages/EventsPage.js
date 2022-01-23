@@ -9,6 +9,8 @@ import { useHttp } from '../hooks/http.hook'
 export const EventsPage = () => {
     const [pagesCount, setPagesCount] = useState(1)
     const [dateFilter, setDateFilter] = useState('allTime')
+    const [eventTemplates, setEventTemplates] = useState([])
+    const [eventTemplateFilter, setEventTemplateFilter] = useState(null)
     const [eventsLoading, setEventsLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [events, setEvents] = useState([])
@@ -25,7 +27,8 @@ export const EventsPage = () => {
                 Authorization: `Bearer ${token}`,
                 Workplace: workplaceFilter,
                 Page: currentPage,
-                test: dateFilter
+                test: dateFilter,
+                Template: eventTemplateFilter
             })
             console.log('ale ' + fetched.values.length)
             const newArr = await Promise.all(fetched.values.map(async element => {
@@ -60,7 +63,19 @@ export const EventsPage = () => {
             setEvents(newArr)
             setEventsLoading(false)
         } catch (e) { }
-    }, [token, request, workplaceFilter, currentPage, setEventsLoading, dateFilter, setEvents])
+    }, [token, request, workplaceFilter, currentPage, setEventsLoading, dateFilter, setEvents, eventTemplateFilter])
+
+    const fetchEventTemplates = useCallback(async () => {
+        try {
+            const fetched = await request('/api/eventTemplates', 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            fetched.values.unshift({id: 'null', event_name: 'Любое'})
+            setEventTemplates(fetched.values)
+        } catch (err) {
+
+        }
+    }, setEventTemplates)
 
     const fetchPagesCount = useCallback(async () => {
         try {
@@ -70,12 +85,13 @@ export const EventsPage = () => {
             const fetched = await request('/api/events/count', 'GET', null, {
                 Authorization: `Bearer ${token}`,
                 Workplace: workplaceFilter,
-                test: dateFilter
+                test: dateFilter,
+                Template: eventTemplateFilter
             })
             setPagesCount(fetched.values)
             // Filling up paginators
             const elements = []
-            for (let i = 0; i < fetched.values; i ++) {
+            for (let i = 0; i < fetched.values; i++) {
                 elements.push(<Paginator pageNumber={i + 1} currentPage={currentPage} setCurrentPage={updateCurrentPage} />)
             }
             setPaginatorElements(elements)
@@ -84,13 +100,14 @@ export const EventsPage = () => {
             }
             setEventsLoading(false)
         } catch (e) { }
-    }, [token, request, setPagesCount, setPaginatorElements, workplaceFilter, currentPage, setEvents, setEventsLoading, dateFilter, setCurrentPage])
+    }, [token, request, setPagesCount, setPaginatorElements, workplaceFilter, currentPage, setEvents, setEventsLoading, dateFilter, setCurrentPage, eventTemplateFilter])
 
     useEffect(async () => {
-        window.M.AutoInit()
         await updateData()
+        await fetchEventTemplates()
+        window.M.AutoInit()
 
-    }, [fetchEvents, fetchPagesCount, setEvents])
+    }, [fetchEvents, fetchPagesCount, setEvents, fetchEventTemplates])
 
     const onWorkplaceFilterChange = (e) => {
         setWorkplaceFilter(e.target.value)
@@ -98,6 +115,10 @@ export const EventsPage = () => {
 
     const onDateFilterChange = (e) => {
         setDateFilter(e.target.value)
+    }
+
+    const onEventTemplateFilterChanged = (e) => {
+        setEventTemplateFilter(e.target.value)
     }
 
     const updateCurrentPage = useCallback(async (inPage) => {
@@ -130,7 +151,7 @@ export const EventsPage = () => {
             <a className="waves-effect waves-light btn black darken-3" href="/events/create">Добавить новое событие</a>
             <div className="event-filters">
                 <div className="row">
-                    <div className="input-field col s4 inline">
+                    <div className="input-field col s3 inline">
                         <select onChange={onDateFilterChange} value={dateFilter}>
                             <option value="allTime">За все время</option>
                             <option value="today">За сегодня</option>
@@ -139,13 +160,23 @@ export const EventsPage = () => {
                         </select>
                         <label>Дата</label>
                     </div>
-                    <div className="input-field col s4 inline">
+                    <div className="input-field col s3 inline">
                         <select onChange={onWorkplaceFilterChange} value={workplaceFilter}>
                             <option value="all">Любое</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                         </select>
                         <label>Рабочее место</label>
+                    </div>
+                    <div className="input-field col s3 inline">
+                        <select onChange={onEventTemplateFilterChanged} value={eventTemplateFilter}>
+                            {eventTemplates.map(template => {
+                                return (
+                                    <option value={template.id}>{template.event_name}</option>
+                                )
+                            })}
+                        </select>
+                        <label>Событие</label>
                     </div>
                 </div>
             </div>

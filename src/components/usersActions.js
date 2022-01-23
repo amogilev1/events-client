@@ -19,7 +19,7 @@ export const UsersActions = ({id}) => {
     return (
         <div>
             <a className="btn-floating btn-small waves-effect waves-light red"><i className="tiny material-icons" onClick={onDeleteHandler} >delete</i></a>
-            <a className="btn-floating btn-small waves-effect waves-light blue"><i className="tiny material-icons">edit</i></a>
+            <a className="btn-floating btn-small waves-effect waves-light blue" href={"users/update/" + id}><i className="tiny material-icons">edit</i></a>
         </div>
     )
 };

@@ -78,9 +78,7 @@ export const CreateEventPage = () => {
                         <select name="eventTemplateId" onChange={changeHandler}>
                             {eventTemplates.map(template => {
                                 return (
-
                                     <option value={template.id}>{template.event_name}</option>
-
                                 )
                             })}
                         </select>

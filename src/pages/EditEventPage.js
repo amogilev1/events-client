@@ -96,7 +96,7 @@ export const EditEventPage = () => {
         <div>
             <h1>Редактировать событие</h1>
             <form className="col s12">
-                <div className="row">
+                {isAdmin && <div><div className="row">
                     <div className="input-field col s6">
 
                         <select name="eventTemplateId" onChange={changeHandler} value={requestBody.eventTemplateId}>
@@ -141,7 +141,7 @@ export const EditEventPage = () => {
                         </select>
                         <label>Выберите номер рабочего места</label>
                     </div>
-                </div>
+                </div></div>}
                 <div className="row">
                     <div className="input-field col s12">
                         <input id="first_name" type="text" className="validate" name="additionalInfo" value={requestBody.additionalInfo} onChange={changeHandler} />
