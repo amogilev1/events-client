@@ -33,9 +33,6 @@ export const EditEventPage = () => {
                         closeInfo: fetched.values[0].close_info
                     }
                 )
-                if (!isAdmin && userId != fetched.values[0].user_id) {
-                    navigate('/events')
-                }
         } catch (e) { }
     }, [token, request, eventId, setRequestBody, isAdmin, userId])
     
