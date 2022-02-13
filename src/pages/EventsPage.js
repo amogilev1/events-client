@@ -148,7 +148,7 @@ export const EventsPage = () => {
     return (
         <div>
             <h1>Журнал событий</h1>
-            <a className="waves-effect waves-light btn black darken-3" href="/events/create">Добавить новое событие</a>
+            <a className="waves-effect waves-light btn black darken-3" href="/CreateEvent">Добавить новое событие</a>
             <div className="event-filters">
                 <div className="row">
                     <div className="input-field col s3 inline">

@@ -16,7 +16,7 @@ export const useRoutes = (isAuthenticated, isAdmin) => {
         return (
             <Routes>
                 <Route path="/events" element={<EventsPage />} />
-                <Route path="/events/create" element={<CreateEventPage />} />
+                <Route path="/CreateEvent" element={<CreateEventPage />} />
                 <Route path="/event/update/:id" element={<EditEventPage />} />
                 <Route path="/users/update/:id" element={<ChangePasswordPage />} />
                 <Route path="/event/:id" element={<DetailPage />} />

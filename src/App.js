@@ -14,16 +14,14 @@ import { ToastContainer } from 'react-toastify'
 let isAuthenticated = true
 
 function App() {
-    const { token, login, logout, userId, isAdmin } = useAuth()
-    console.log('is admin ' + isAdmin)
-    console.log('user id ' + userId)
+    const { token, login, logout, userId, isAdmin, name, lastname } = useAuth()
     isAuthenticated = !!token
 
     const routes = useRoutes(isAuthenticated, isAdmin)
     return (
         <body>
             <BrowserRouter>
-                <AuthContext.Provider value={{ token, login, logout, userId, isAuthenticated, isAdmin }}>
+                <AuthContext.Provider value={{ token, login, logout, userId, isAuthenticated, isAdmin, name, lastname }}>
                     {isAuthenticated && <Navbar />}
                     <main>
                         <div className="Mycontainer">

@@ -30,9 +30,9 @@ export const AuthPage = () => {
     const loginHandler = async () => {
         try {
             const data = await request('/api/auth/signin', 'POST', { ...form })
-            auth.login(data.values.token, data.values.userId, data.values.roleId)
+            auth.login(data.values.token, data.values.userId, data.values.roleId, data.values.name, data.values.lastname)
             if (data.values.token) {
-                successNotify('Авторизация прошла успешно')
+                successNotify('Добро пожаловать ' + data.values.name + "!")
             }
         } catch (e) {
         }
